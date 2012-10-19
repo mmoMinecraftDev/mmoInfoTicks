@@ -1,0 +1,14 @@
+name: mmoInfoTicks
+version: ${releaseVersion}.${buildNumber}
+description: Adds a {ticks} token to the mmoInfo token list.
+author: mmoMinecraftDev
+website: http://mmo.me.uk
+
+main: mmo.Info.MMOInfoTicks
+depend: [Spout, mmoCore, mmoInfo]
+
+
+permissions:
+    mmo.info.ticks:
+        description: Allows {ticks} to show the current server tps
+        default: op
