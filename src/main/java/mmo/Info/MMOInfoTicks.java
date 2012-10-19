@@ -79,15 +79,16 @@ public class MMOInfoTicks extends MMOPlugin implements Listener {
 
 	public class CustomWidget extends GenericContainer {
 
-		private final Gradient left = new GenericGradient(new Color(0.0f, 1.0f, 0.0f, 0.75f));
-		private final Gradient right = new GenericGradient(new Color(1.0f, 0.0f, 0.0f, 0.75f));
-		private final Gradient background = new GenericGradient(new Color(0.0f, 0.0f, 0.0f, 0.75f));
+		private final Gradient left = new GenericGradient(new Color(0, 1f, 0, 0.75f));
+		private final Gradient right = new GenericGradient(new Color(1f, 0, 0, 0.75f));
+		private final Gradient background = new GenericGradient(new Color(0, 0, 0, 0.75f));
+		private final Label label = new GenericLabel("20");
 
 		public CustomWidget() {
 			super();
-			left.setMargin(1, 1, 1, 1).setPriority(RenderPriority.High);
-			right.setMargin(1, 1, 1, 41).setPriority(RenderPriority.High);
-			this.setLayout(ContainerType.OVERLAY).setFixed(true).setWidth(42).setHeight(10);
+			left.setMargin(1).setPriority(RenderPriority.Low);
+			right.setMargin(1).setPriority(RenderPriority.Low);
+			this.setLayout(ContainerType.OVERLAY).setMinWidth(42).setMaxWidth(42);
 			this.addChildren(background, left, right);
 		}
 
@@ -96,6 +97,7 @@ public class MMOInfoTicks extends MMOPlugin implements Listener {
 			final int tpsWidth = (tps * 2) + 1;
 			left.setMarginRight(tpsWidth);
 			right.setMarginLeft(tpsWidth);
+			label.setText(Integer.toString(tps));
 		}
 	}
 }
