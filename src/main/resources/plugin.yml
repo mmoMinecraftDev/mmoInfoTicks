@@ -7,7 +7,6 @@ website: http://mmo.me.uk
 main: mmo.Info.MMOInfoTicks
 depend: [Spout, mmoCore, mmoInfo]
 
-
 permissions:
     mmo.info.ticks:
         description: Allows {ticks} to show the current server tps
