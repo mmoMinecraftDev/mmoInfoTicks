@@ -17,6 +17,7 @@
  */
 package mmo.Info;
 
+import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 import mmo.Core.InfoAPI.MMOInfoEvent;
@@ -31,7 +32,7 @@ import org.getspout.spoutapi.player.SpoutPlayer;
 public class MMOInfoTicks extends MMOPlugin implements Listener {
 
 	private static final Map<Player, CustomWidget> WIDGETS = new HashMap<Player, CustomWidget>();
-	private int tps = 0;
+	private double tps = 0;
 
 	@Override
 	public EnumBitSet mmoSupport(final EnumBitSet support) {
@@ -47,7 +48,7 @@ public class MMOInfoTicks extends MMOPlugin implements Listener {
 		getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
 
 			private long currentSec = 0;
-			private int ticks = 0;
+			private double ticks = 0;
 
 			@Override
 			public void run() {
@@ -71,33 +72,44 @@ public class MMOInfoTicks extends MMOPlugin implements Listener {
 				final CustomWidget widget = new CustomWidget();
 				WIDGETS.put(player, widget);
 				event.setWidget(plugin, widget);
-// Can't think of an icon for it...
-//				event.setIcon("clock.png");
 			}
 		}
 	}
 
+	//RGBA to RGBA Float = (255,0,0) = (1,0,0, divide color code by 255 to get float value.
+
 	public class CustomWidget extends GenericContainer {
 
-		private final Gradient left = new GenericGradient(new Color(0, 1f, 0, 0.75f));
-		private final Gradient right = new GenericGradient(new Color(1f, 0, 0, 0.75f));
-		private final Gradient background = new GenericGradient(new Color(0, 0, 0, 0.75f));
+		private final Gradient left = new GenericGradient(new Color(0, 1f, 0, 0.75f)); //Green
+		private final Gradient right = new GenericGradient(new Color(0.69f, 0.09f, 0.12f, 1)); //Red
+		private final Gradient background = new GenericGradient(new Color(0, 0, 0, 0.75f)); //Black
 		private final Label label = new GenericLabel("20");
+		private final Label label2 = new GenericLabel("Server:");
+		private final DecimalFormat df = new DecimalFormat("00.0");
 
 		public CustomWidget() {
 			super();
-			left.setMargin(1).setPriority(RenderPriority.Low);
-			right.setMargin(1).setPriority(RenderPriority.Low);
-			this.setLayout(ContainerType.OVERLAY).setMinWidth(42).setMaxWidth(42);
-			this.addChildren(background, left, right);
+			left.setMargin(1).setPriority(RenderPriority.Low).setHeight(8).setWidth(30).shiftXPos(0);
+			right.setMargin(1).setPriority(RenderPriority.Normal).setHeight(8).setWidth(30).shiftXPos(0);
+			background.setMargin(1).setPriority(RenderPriority.Low).setHeight(8).shiftXPos(0);
+			label.setScale(0.8f).setMargin(1).setPriority(RenderPriority.Lowest).setHeight(5).shiftXPos(6).shiftYPos(1);
+			label2.setScale(0.8f).setMargin(1).setPriority(RenderPriority.Lowest).setHeight(5).shiftXPos(-35).shiftYPos(1);
+			this.setLayout(ContainerType.OVERLAY).setMinWidth(35).setMaxWidth(35);
+			this.addChildren(left, right, label, label2);
 		}
 
+		private transient int tick = 0;
 		@Override
 		public void onTick() {
-			final int tpsWidth = (tps * 2) + 1;
-			left.setMarginRight(tpsWidth);
-			right.setMarginLeft(tpsWidth);
-			label.setText(Integer.toString(tps));
+			if (tick++ % 50 == 0) {		
+				final double tpsWidth = ((int) tps+10);				 
+				label.setText(df.format(tps));			
+				if (tps<=18.0) {
+					left.setWidth((int) (tpsWidth));
+				} else {
+					left.setWidth(30);
+				}				
+			}
 		}
 	}
 }
